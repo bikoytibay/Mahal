@@ -92,9 +92,22 @@
             transform: translateY(20px);
             transition: opacity 0.8s, transform 0.8s;
             display: none;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .trait-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(230, 74, 141, 0.15);
         }
         
         .trait-card.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+        
+        .trait-card.revealed {
             opacity: 1;
             transform: translateY(0);
             display: block;
@@ -110,6 +123,36 @@
             font-size: 1.2rem;
             font-weight: 600;
             color: #8a4b8f;
+        }
+        
+        .reveal-instruction {
+            font-size: 1rem;
+            color: #e64a8d;
+            margin-top: 10px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        .reveal-btn {
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #ff80bf, #ff4d94);
+            color: white;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 8px 15px rgba(230, 74, 141, 0.2);
+        }
+        
+        .reveal-btn:hover {
+            background: linear-gradient(to right, #ff4d94, #ff80bf);
+            transform: scale(1.05);
+            box-shadow: 0 12px 20px rgba(230, 74, 141, 0.3);
         }
         
         .proposal-section {
@@ -206,30 +249,6 @@
         .persuasion-btn:hover {
             background: linear-gradient(to right, #ff9800, #ffb74d);
             transform: scale(1.05);
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background-color: #ffd9ec;
-            border-radius: 4px;
-            margin: 30px 0 20px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(to right, #ff80bf, #ff4d94);
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 4px;
-        }
-        
-        .counter {
-            font-size: 1.1rem;
-            color: #8a4b8f;
-            margin-bottom: 20px;
-            font-weight: 600;
         }
         
         .instructions {
@@ -386,6 +405,11 @@
             .trait-text {
                 font-size: 1.1rem;
             }
+            
+            .reveal-btn {
+                padding: 10px 20px;
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -400,17 +424,15 @@
         
         <h2>Wanna know why?</h2>
         
-        <div class="counter">
-            Trait <span id="currentTrait">1</span> of <span id="totalTraits">10</span>
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
+        <p class="reveal-instruction">Click each heart to reveal what makes you special</p>
         
         <div class="traits-container">
             <!-- Traits will be inserted here by JavaScript -->
         </div>
+        
+        <button class="reveal-btn" id="revealAllBtn" style="display: none;">
+            <i class="fas fa-heart"></i> Reveal All Traits
+        </button>
         
         <div class="proposal-section" id="proposalSection">
             <div class="question-box">
@@ -450,7 +472,7 @@
             <p class="persuasion-count" id="persuasionCount">Persuasion attempt: <span id="attemptCount">1</span>/10</p>
         </div>
         
-        <p class="instructions">Keep watching as I share what makes you so special...</p>
+        <p class="instructions">Keep clicking to discover what makes you so special...</p>
     </div>
     
     <div class="celebration" id="celebration">
@@ -463,13 +485,13 @@
     { icon: "fas fa-smile", text: "Your smile feels like home, even on days when the world feels heavy" },
     { icon: "fas fa-heart", text: "Your heart carries a kindness that softens even my darkest moments" },
     { icon: "fas fa-brain", text: "Your mind challenges me to grow, even when growth feels painful" },
-    { icon: "fas fa-star", text: "Your beauty isn’t loud—it’s the kind that stays long after the moment passes" },
-    { icon: "fas fa-hands-helping", text: "You stand by me quietly, even when I’m not at my best" },
+    { icon: "fas fa-star", text: "Your beauty isn't loud—it's the kind that stays long after the moment passes" },
+    { icon: "fas fa-hands-helping", text: "You stand by me quietly, even when I'm not at my best" },
     { icon: "fas fa-ear-listen", text: "You listen in a way that makes me feel truly seen, even in silence" },
     { icon: "fas fa-laugh", text: "Your laughter reminds me that joy can exist alongside pain" },
     { icon: "fas fa-shield-alt", text: "Your strength shows most in the moments no one else sees" },
     { icon: "fas fa-user-friends", text: "You know me in ways no one else ever has—and love me anyway" },
-    { icon: "fas fa-infinity", text: "Loving you feels like choosing you again and again, even when it’s hard" }
+    { icon: "fas fa-infinity", text: "Loving you feels like choosing you again and again, even when it's hard" }
 ];
         
         // Define the persuasion questions (randomized each time)
@@ -497,9 +519,6 @@
         
         // DOM elements
         const traitsContainer = document.querySelector('.traits-container');
-        const progressBar = document.getElementById('progressBar');
-        const currentTraitEl = document.getElementById('currentTrait');
-        const totalTraitsEl = document.getElementById('totalTraits');
         const proposalSection = document.getElementById('proposalSection');
         const persuasionSection = document.getElementById('persuasionSection');
         const persuasionText = document.getElementById('persuasionText');
@@ -510,14 +529,15 @@
         const celebration = document.getElementById('celebration');
         const heartsContainer = document.getElementById('heartsContainer');
         const attemptCountEl = document.getElementById('attemptCount');
-        
-        // Set total traits count
-        totalTraitsEl.textContent = traits.length;
+        const revealAllBtn = document.getElementById('revealAllBtn');
+        const instruction = document.querySelector('.reveal-instruction');
         
         // Variables for tracking
         let persuasionAttempts = 0;
         let shuffledQuestions = [];
         let currentQuestionIndex = 0;
+        let revealedTraits = 0;
+        let allTraitsRevealed = false;
         
         // Initialize persuasion questions
         function initializePersuasionQuestions() {
@@ -537,7 +557,7 @@
             return question;
         }
         
-        // Create trait cards
+        // Create trait cards with click-to-reveal functionality
         traits.forEach((trait, index) => {
             const traitCard = document.createElement('div');
             traitCard.className = 'trait-card';
@@ -545,16 +565,76 @@
                 <i class="${trait.icon}"></i>
                 <p class="trait-text">${trait.text}</p>
             `;
+            
+            // Add click event to reveal trait
+            traitCard.addEventListener('click', function() {
+                if (!this.classList.contains('revealed')) {
+                    this.classList.add('revealed');
+                    revealedTraits++;
+                    
+                    // Animate the icon
+                    const icon = this.querySelector('i');
+                    icon.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        icon.style.transform = 'scale(1)';
+                    }, 300);
+                    
+                    // Check if all traits are revealed
+                    if (revealedTraits === traits.length) {
+                        allTraitsRevealed = true;
+                        instruction.textContent = "All traits revealed! Scroll down for the question...";
+                        revealAllBtn.style.display = 'none';
+                        
+                        // Show proposal section after a short delay
+                        setTimeout(() => {
+                            proposalSection.classList.add('show');
+                            
+                            // Scroll to the proposal section smoothly
+                            proposalSection.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }, 1000);
+                    } else if (revealedTraits === Math.floor(traits.length / 2)) {
+                        // Show reveal all button halfway through
+                        revealAllBtn.style.display = 'block';
+                    }
+                }
+            });
+            
             traitsContainer.appendChild(traitCard);
         });
         
-        // Get all trait cards
-        const traitCards = document.querySelectorAll('.trait-card');
+        // Function to reveal all traits at once
+        function revealAllTraits() {
+            const traitCards = document.querySelectorAll('.trait-card');
+            traitCards.forEach((card, index) => {
+                if (!card.classList.contains('revealed')) {
+                    setTimeout(() => {
+                        card.classList.add('revealed');
+                    }, index * 100);
+                }
+            });
+            
+            revealedTraits = traits.length;
+            allTraitsRevealed = true;
+            instruction.textContent = "All traits revealed! Scroll down for the question...";
+            revealAllBtn.style.display = 'none';
+            
+            // Show proposal section after all traits are revealed
+            setTimeout(() => {
+                proposalSection.classList.add('show');
+                
+                // Scroll to the proposal section smoothly
+                proposalSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, traits.length * 100 + 500);
+        }
         
-        // Start with the first trait
-        let currentTraitIndex = 0;
-        traitCards[currentTraitIndex].classList.add('active');
-        updateProgress();
+        // Event listener for reveal all button
+        revealAllBtn.addEventListener('click', revealAllTraits);
         
         // Create floating hearts in background
         function createHearts() {
@@ -568,39 +648,6 @@
                 heart.style.color = `rgba(255, ${Math.floor(Math.random() * 100 + 77)}, ${Math.floor(Math.random() * 100 + 148)}, ${Math.random() * 0.4 + 0.2})`;
                 heartsContainer.appendChild(heart);
             }
-        }
-        
-        // Update progress bar and counter
-        function updateProgress() {
-            const progress = ((currentTraitIndex + 1) / traits.length) * 100;
-            progressBar.style.width = `${progress}%`;
-            currentTraitEl.textContent = currentTraitIndex + 1;
-        }
-        
-        // Show next trait with animation
-        function showNextTrait() {
-            // Hide current trait
-            traitCards[currentTraitIndex].classList.remove('active');
-            
-            // Move to next trait
-            currentTraitIndex++;
-            
-            // If we've shown all traits, show proposal
-            if (currentTraitIndex >= traits.length) {
-                setTimeout(() => {
-                    proposalSection.classList.add('show');
-                }, 800);
-                return;
-            }
-            
-            // Show next trait
-            setTimeout(() => {
-                traitCards[currentTraitIndex].classList.add('active');
-                updateProgress();
-            }, 500);
-            
-            // Schedule next trait automatically
-            setTimeout(showNextTrait, 2500);
         }
         
         // Create fireworks for celebration
@@ -638,6 +685,12 @@
             // Show persuasion section
             setTimeout(() => {
                 persuasionSection.classList.add('show');
+                
+                // Scroll to persuasion section
+                persuasionSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
             }, 500);
             
             // If this is the 10th attempt, change the button text
@@ -667,9 +720,6 @@
                 }, i * 50);
             }
         }
-        
-        // Start the trait sequence after a short delay
-        setTimeout(showNextTrait, 1500);
         
         // Yes button event (on main proposal)
         yesBtn.addEventListener('click', function() {
