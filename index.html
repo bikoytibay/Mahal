@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In case you were wondering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe6f2 0%, #ffccff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #5a3d5c;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(178, 100, 162, 0.2);
+            padding: 30px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #ffb6e1;
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #e64a8d;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #d63384;
+            font-size: 2rem;
+            margin: 25px 0 15px;
+        }
+        
+        h3 {
+            font-family: 'Dancing Script', cursive;
+            color: #c2185b;
+            font-size: 1.8rem;
+            margin: 20px 0 15px;
+        }
+        
+        .heart-icon {
+            color: #ff4d94;
+            font-size: 2rem;
+            margin: 10px auto;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .traits-container {
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .trait-card {
+            background: linear-gradient(to right, #ffebf3, #fff);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 8px 15px rgba(230, 74, 141, 0.1);
+            border-left: 6px solid #ff80bf;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+            display: none;
+        }
+        
+        .trait-card.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+        
+        .trait-card i {
+            color: #ff4d94;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .trait-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8a4b8f;
+        }
+        
+        .proposal-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s, transform 1s;
+            padding: 20px 0;
+        }
+        
+        .proposal-section.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .question-box {
+            background: linear-gradient(135deg, #ffccdc, #ffebf7);
+            border-radius: 25px;
+            padding: 30px 20px;
+            margin: 25px 0;
+            box-shadow: 0 10px 25px rgba(214, 51, 132, 0.2);
+            border: 4px solid #ff80bf;
+            position: relative;
+        }
+        
+        .question-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #c2185b;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .persuasion-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #c2185b;
+            line-height: 1.4;
+            margin: 20px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 16px 30px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            min-width: 140px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .yes-btn {
+            background: linear-gradient(to right, #ff4081, #ff80ab);
+            color: white;
+        }
+        
+        .yes-btn:hover {
+            background: linear-gradient(to right, #f50057, #ff4081);
+            transform: scale(1.05);
+            box-shadow: 0 12px 20px rgba(245, 0, 87, 0.3);
+        }
+        
+        .no-btn {
+            background: linear-gradient(to right, #b39ddb, #d1c4e9);
+            color: white;
+        }
+        
+        .no-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .persuasion-btn {
+            background: linear-gradient(to right, #ffb74d, #ffcc80);
+            color: #5d4037;
+        }
+        
+        .persuasion-btn:hover {
+            background: linear-gradient(to right, #ff9800, #ffb74d);
+            transform: scale(1.05);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #ffd9ec;
+            border-radius: 4px;
+            margin: 30px 0 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff80bf, #ff4d94);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+        
+        .counter {
+            font-size: 1.1rem;
+            color: #8a4b8f;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .instructions {
+            font-size: 0.9rem;
+            color: #9e9e9e;
+            margin-top: 25px;
+            font-style: italic;
+        }
+        
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            color: rgba(255, 77, 148, 0.3);
+            font-size: 1.5rem;
+            animation: float 6s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .persuasion-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s, transform 1s;
+            padding: 20px 0;
+        }
+        
+        .persuasion-section.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .persuasion-box {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border-radius: 25px;
+            padding: 25px 20px;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(255, 167, 38, 0.2);
+            border: 4px solid #ffb74d;
+            position: relative;
+        }
+        
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 182, 225, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeIn 0.5s;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .celebration h1 {
+            font-size: 3.5rem;
+            color: #c2185b;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .celebration p {
+            font-size: 1.5rem;
+            color: #8a4b8f;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 90%;
+        }
+        
+        .fireworks {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 5px #ff4081;
+            animation: explode 1.5s infinite;
+        }
+        
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        .persuasion-count {
+            font-size: 1rem;
+            color: #ff9800;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .question-text {
+                font-size: 1.8rem;
+            }
+            
+            .persuasion-text {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 14px 25px;
+                font-size: 1.2rem;
+                min-width: 120px;
+            }
+            
+            .trait-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="container">
+        <h1>Mahal💖</h1>
+        <div class="heart-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+        
+        <h2>Wanna know why?</h2>
+        
+        <div class="counter">
+            Trait <span id="currentTrait">1</span> of <span id="totalTraits">10</span>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="traits-container">
+            <!-- Traits will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="proposal-section" id="proposalSection">
+            <div class="question-box">
+                <p class="question-text">"Would you do me the honor of being your hubby?"</p>
+                <div class="heart-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+            </div>
+            
+            <div class="buttons-container">
+                <button class="btn yes-btn" id="yesBtn">
+                    <i class="fas fa-heart"></i> YES!
+                </button>
+                <button class="btn no-btn" id="noBtn">
+                    <i class="fas fa-times"></i> No
+                </button>
+            </div>
+        </div>
+        
+        <div class="persuasion-section" id="persuasionSection">
+            <h3>My Heart's Plea 💘</h3>
+            <div class="persuasion-box">
+                <p class="persuasion-text" id="persuasionText"></p>
+                <div class="heart-icon">
+                    <i class="fas fa-heart-broken"></i>
+                </div>
+            </div>
+            
+            <div class="buttons-container">
+                <button class="btn yes-btn" id="persuasionYesBtn">
+                    <i class="fas fa-heart"></i> Yes, I Will!
+                </button>
+                <button class="btn persuasion-btn" id="anotherNoBtn">
+                    <i class="fas fa-comment"></i> Still Thinking...
+                </button>
+            </div>
+            <p class="persuasion-count" id="persuasionCount">Persuasion attempt: <span id="attemptCount">1</span>/10</p>
+        </div>
+        
+        <p class="instructions">Keep watching as I share what makes you so special...</p>
+    </div>
+    
+    <div class="celebration" id="celebration">
+        <!-- Celebration content will be inserted here by JavaScript -->
+    </div>
+
+    <script>
+        // Define the traits
+        const traits = [
+    { icon: "fas fa-smile", text: "Your smile feels like home, even on days when the world feels heavy" },
+    { icon: "fas fa-heart", text: "Your heart carries a kindness that softens even my darkest moments" },
+    { icon: "fas fa-brain", text: "Your mind challenges me to grow, even when growth feels painful" },
+    { icon: "fas fa-star", text: "Your beauty isn’t loud—it’s the kind that stays long after the moment passes" },
+    { icon: "fas fa-hands-helping", text: "You stand by me quietly, even when I’m not at my best" },
+    { icon: "fas fa-ear-listen", text: "You listen in a way that makes me feel truly seen, even in silence" },
+    { icon: "fas fa-laugh", text: "Your laughter reminds me that joy can exist alongside pain" },
+    { icon: "fas fa-shield-alt", text: "Your strength shows most in the moments no one else sees" },
+    { icon: "fas fa-user-friends", text: "You know me in ways no one else ever has—and love me anyway" },
+    { icon: "fas fa-infinity", text: "Loving you feels like choosing you again and again, even when it’s hard" }
+];
+        
+        // Define the persuasion questions (randomized each time)
+        const persuasionQuestions = [
+            "But how can I live without you by my side forever?",
+            "Who will I share all my dreams and secrets with if not you?",
+            "How can I imagine a future where you're not my wife?",
+            "Who will laugh at my silly jokes and make my days complete?",
+            "How can I wake up each morning without seeing your beautiful face first?",
+            "Who will be my partner in every adventure life brings our way?",
+            "How can my heart be whole if it doesn't beat in rhythm with yours forever?",
+            "Who will I grow old with, creating beautiful memories at every stage?",
+            "How can I picture my life without you as the mother of our children?",
+            "Who will be my constant, my home, my everything if not you?"
+        ];
+        
+        // Shuffle the persuasion questions array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // DOM elements
+        const traitsContainer = document.querySelector('.traits-container');
+        const progressBar = document.getElementById('progressBar');
+        const currentTraitEl = document.getElementById('currentTrait');
+        const totalTraitsEl = document.getElementById('totalTraits');
+        const proposalSection = document.getElementById('proposalSection');
+        const persuasionSection = document.getElementById('persuasionSection');
+        const persuasionText = document.getElementById('persuasionText');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const persuasionYesBtn = document.getElementById('persuasionYesBtn');
+        const anotherNoBtn = document.getElementById('anotherNoBtn');
+        const celebration = document.getElementById('celebration');
+        const heartsContainer = document.getElementById('heartsContainer');
+        const attemptCountEl = document.getElementById('attemptCount');
+        
+        // Set total traits count
+        totalTraitsEl.textContent = traits.length;
+        
+        // Variables for tracking
+        let persuasionAttempts = 0;
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        
+        // Initialize persuasion questions
+        function initializePersuasionQuestions() {
+            shuffledQuestions = shuffleArray([...persuasionQuestions]);
+            currentQuestionIndex = 0;
+        }
+        
+        // Get next persuasion question
+        function getNextPersuasionQuestion() {
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                // If we've shown all questions, reshuffle and start over
+                initializePersuasionQuestions();
+            }
+            
+            const question = shuffledQuestions[currentQuestionIndex];
+            currentQuestionIndex++;
+            return question;
+        }
+        
+        // Create trait cards
+        traits.forEach((trait, index) => {
+            const traitCard = document.createElement('div');
+            traitCard.className = 'trait-card';
+            traitCard.innerHTML = `
+                <i class="${trait.icon}"></i>
+                <p class="trait-text">${trait.text}</p>
+            `;
+            traitsContainer.appendChild(traitCard);
+        });
+        
+        // Get all trait cards
+        const traitCards = document.querySelectorAll('.trait-card');
+        
+        // Start with the first trait
+        let currentTraitIndex = 0;
+        traitCards[currentTraitIndex].classList.add('active');
+        updateProgress();
+        
+        // Create floating hearts in background
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.color = `rgba(255, ${Math.floor(Math.random() * 100 + 77)}, ${Math.floor(Math.random() * 100 + 148)}, ${Math.random() * 0.4 + 0.2})`;
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Update progress bar and counter
+        function updateProgress() {
+            const progress = ((currentTraitIndex + 1) / traits.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTraitEl.textContent = currentTraitIndex + 1;
+        }
+        
+        // Show next trait with animation
+        function showNextTrait() {
+            // Hide current trait
+            traitCards[currentTraitIndex].classList.remove('active');
+            
+            // Move to next trait
+            currentTraitIndex++;
+            
+            // If we've shown all traits, show proposal
+            if (currentTraitIndex >= traits.length) {
+                setTimeout(() => {
+                    proposalSection.classList.add('show');
+                }, 800);
+                return;
+            }
+            
+            // Show next trait
+            setTimeout(() => {
+                traitCards[currentTraitIndex].classList.add('active');
+                updateProgress();
+            }, 500);
+            
+            // Schedule next trait automatically
+            setTimeout(showNextTrait, 2500);
+        }
+        
+        // Create fireworks for celebration
+        function createFireworks() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'fireworks';
+                    firework.style.left = Math.random() * 100 + 'vw';
+                    firework.style.top = Math.random() * 100 + 'vh';
+                    firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                    firework.style.boxShadow = `0 0 20px 5px hsl(${Math.random() * 360}, 100%, 70%)`;
+                    document.body.appendChild(firework);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 1500);
+                }, i * 100);
+            }
+        }
+        
+        // Show persuasion section with a question
+        function showPersuasion() {
+            proposalSection.classList.remove('show');
+            
+            // Get the next persuasion question
+            const question = getNextPersuasionQuestion();
+            persuasionText.textContent = question;
+            
+            // Update attempt counter
+            persuasionAttempts++;
+            attemptCountEl.textContent = persuasionAttempts;
+            
+            // Show persuasion section
+            setTimeout(() => {
+                persuasionSection.classList.add('show');
+            }, 500);
+            
+            // If this is the 10th attempt, change the button text
+            if (persuasionAttempts >= 10) {
+                anotherNoBtn.innerHTML = '<i class="fas fa-heart"></i> OK, You Win!';
+                anotherNoBtn.classList.remove('persuasion-btn');
+                anotherNoBtn.classList.add('yes-btn');
+            }
+        }
+        
+        // Show celebration screen
+        function showCelebration(message) {
+            celebration.innerHTML = `
+                <h1>YES! 💍🎉</h1>
+                <p>${message}</p>
+                <p>I can't wait to spend forever with you, my love.</p>
+                <div class="heart-icon" style="font-size: 4rem; margin-top: 30px;">
+                    <i class="fas fa-heart"></i>
+                </div>
+            `;
+            celebration.style.display = 'flex';
+            
+            // Create lots of fireworks
+            for (let i = 0; i < 200; i++) {
+                setTimeout(() => {
+                    createFireworks();
+                }, i * 50);
+            }
+        }
+        
+        // Start the trait sequence after a short delay
+        setTimeout(showNextTrait, 1500);
+        
+        // Yes button event (on main proposal)
+        yesBtn.addEventListener('click', function() {
+            showCelebration("You've made me the happiest person in the world!");
+        });
+        
+        // No button event (on main proposal)
+        noBtn.addEventListener('click', function() {
+            // Initialize persuasion questions on first "No"
+            if (persuasionAttempts === 0) {
+                initializePersuasionQuestions();
+            }
+            
+            showPersuasion();
+        });
+        
+        // Yes button event (in persuasion section)
+        persuasionYesBtn.addEventListener('click', function() {
+            showCelebration("You've made me the happiest person in the world!");
+        });
+        
+        // Another No button event (in persuasion section)
+        anotherNoBtn.addEventListener('click', function() {
+            // If this is the 10th attempt, treat it as a yes
+            if (persuasionAttempts >= 10) {
+                showCelebration("I knew you'd say yes! You've made me the happiest person in the world!");
+                return;
+            }
+            
+            showPersuasion();
+        });
+        
+        // Initialize the page
+        createHearts();
+    </script>
+</body>
+</html>
